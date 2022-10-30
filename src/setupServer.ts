@@ -14,6 +14,7 @@ import cookieSessions from "cookie-session";
 import HTTP_STATUS from "http-status-codes";
 import compression from "compression";
 import "express-async-errors";
+import applicationRoutes from "./routes";
 
 import { config } from "./config";
 // SOCKET.IO
@@ -35,6 +36,7 @@ export class StreamChatServer {
     this.globalErrorHandler(this.app);
     this.startServer(this.app);
   }
+
   private securityMiddleware(app: Application) {
     app.use(
       cookieSessions({
@@ -55,13 +57,19 @@ export class StreamChatServer {
       })
     );
   }
+
   private standardMiddleware(app: Application) {
     app.use(compression());
     app.use(json({ limit: "50mb" }));
     app.use(urlencoded({ extended: true }));
   }
-  private routesMiddleware(app: Application) {}
+
+  private routesMiddleware(app: Application) {
+    applicationRoutes(app);
+  }
+
   private globalErrorHandler(app: Application) {}
+
   private async startServer(app: Application): Promise<void> {
     try {
       const httpServer: http.Server = new http.Server(this.app);
@@ -72,6 +80,7 @@ export class StreamChatServer {
       console.log(error);
     }
   }
+
   private async createSocketIO(httpServer: http.Server): Promise<Server> {
     const io: Server = new Server(httpServer, {
       cors: {
@@ -87,6 +96,7 @@ export class StreamChatServer {
     io.adapter(createAdapter(pubClient, subClient));
     return io;
   }
+
   private startHTTPServer(httpServer: http.Server) {
     httpServer.listen(+config.PORT!, () => {
       console.log("Server running on " + config.PORT);
