@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "dev": "nodemon src/app.ts"
+    "dev": "nodemon -r tsconfig-paths/register src/app.ts"
   },
   "repository": {
     "type": "git",
