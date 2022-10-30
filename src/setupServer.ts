@@ -14,7 +14,14 @@ import cookieSessions from "cookie-session";
 import HTTP_STATUS from "http-status-codes";
 import compression from "compression";
 import "express-async-errors";
+
 import { config } from "./config";
+// SOCKET.IO
+import { Server } from "socket.io";
+
+// REDIS
+import { createClient } from "redis";
+import { createAdapter } from "@socket.io/redis-adapter";
 
 export class StreamChatServer {
   constructor(private app: Application) {
@@ -58,15 +65,33 @@ export class StreamChatServer {
   private async startServer(app: Application): Promise<void> {
     try {
       const httpServer: http.Server = new http.Server(this.app);
+      const socketIo: Server = await this.createSocketIO(httpServer);
       this.startHTTPServer(httpServer);
+      this.socketIOConnection(socketIo);
     } catch (error) {
       console.log(error);
     }
   }
-  private createSocketIO(httpServer: http.Server) {}
+  private async createSocketIO(httpServer: http.Server): Promise<Server> {
+    const io: Server = new Server(httpServer, {
+      cors: {
+        origin: config.CLIENT_URL,
+        methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTION"],
+      },
+    });
+    const pubClient = createClient({
+      url: config.REDIS_HOST,
+    });
+    const subClient = pubClient.duplicate();
+    await Promise.all([pubClient.connect(), subClient.connect()]);
+    io.adapter(createAdapter(pubClient, subClient));
+    return io;
+  }
   private startHTTPServer(httpServer: http.Server) {
     httpServer.listen(+config.PORT!, () => {
       console.log("Server running on " + config.PORT);
     });
   }
+
+  private socketIOConnection(io: Server): void {}
 }

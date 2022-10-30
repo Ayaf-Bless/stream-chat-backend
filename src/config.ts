@@ -10,6 +10,7 @@ class Config {
   public SECRET_KEY_COOKIE_2: string | undefined;
   public CLIENT_URL: string | undefined;
   public PORT: string | undefined;
+  public REDIS_HOST: string | undefined;
 
   constructor() {
     this.DATABASE_URL = process.env.DATABASE_URL;
@@ -19,6 +20,7 @@ class Config {
     this.SECRET_KEY_COOKIE_2 = process.env.SECRET_KEY_COOKIE_2;
     this.CLIENT_URL = process.env.CLIENT_URL;
     this.PORT = process.env.PORT;
+    this.REDIS_HOST = process.env.REDIS_HOST;
   }
 
   public validateConfig() {
