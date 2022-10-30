@@ -7,10 +7,15 @@ import {
   NextFunction,
 } from "express";
 import { Server } from "http";
+import cors from "cors";
+import helmet from "helmet";
+import hpp from "hpp";
+import cookieSessions from "cookie-session";
+import HTTP_STATUS from "http-status-codes";
+import compression from "compression";
+import "express-async-errors";
 
 export class StreamChatServer {
-  //   private app: Application;
-
   constructor(private app: Application) {
     this.app = app;
   }
@@ -22,8 +27,31 @@ export class StreamChatServer {
     this.globalErrorHandler(this.app);
     this.startServer(this.app);
   }
-  private securityMiddleware(app: Application) {}
-  private standardMiddleware(app: Application) {}
+  private securityMiddleware(app: Application) {
+    app.use(
+      cookieSessions({
+        name: "session",
+        keys: ["test1", "test2"],
+        maxAge: 24 * 7 * 3600000,
+        secure: false,
+      })
+    );
+    app.use(hpp());
+    app.use(helmet());
+    app.use(
+      cors({
+        origin: "*",
+        credentials: true,
+        optionsSuccessStatus: 200,
+        methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTION"],
+      })
+    );
+  }
+  private standardMiddleware(app: Application) {
+    app.use(compression());
+    app.use(json({ limit: "50mb" }));
+    app.use(urlencoded({ extended: true }));
+  }
   private routesMiddleware(app: Application) {}
   private globalErrorHandler(app: Application) {}
   private startServer(app: Application) {}
