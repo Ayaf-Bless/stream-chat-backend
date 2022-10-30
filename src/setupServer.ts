@@ -14,8 +14,7 @@ import cookieSessions from "cookie-session";
 import HTTP_STATUS from "http-status-codes";
 import compression from "compression";
 import "express-async-errors";
-
-const SERVER_PORT = 4000;
+import { config } from "./config";
 
 export class StreamChatServer {
   constructor(private app: Application) {
@@ -33,16 +32,16 @@ export class StreamChatServer {
     app.use(
       cookieSessions({
         name: "session",
-        keys: ["test1", "test2"],
+        keys: [config.SECRET_KEY_COOKIE_1!, config.SECRET_KEY_COOKIE_2!],
         maxAge: 24 * 7 * 3600000,
-        secure: false,
+        secure: config.NODE_ENV !== "development",
       })
     );
     app.use(hpp());
     app.use(helmet());
     app.use(
       cors({
-        origin: "*",
+        origin: config.CLIENT_URL,
         credentials: true,
         optionsSuccessStatus: 200,
         methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTION"],
@@ -66,8 +65,8 @@ export class StreamChatServer {
   }
   private createSocketIO(httpServer: http.Server) {}
   private startHTTPServer(httpServer: http.Server) {
-    httpServer.listen(SERVER_PORT, () => {
-      console.log("Server running on " + SERVER_PORT);
+    httpServer.listen(+config.PORT!, () => {
+      console.log("Server running on " + config.PORT);
     });
   }
 }

@@ -1,9 +1,10 @@
 import mongoose from "mongoose";
+import { config } from "./config";
 
 export default function () {
   const connect = () => {
     mongoose
-      .connect("mongodb://localhost:27017/stream_chat_backend")
+      .connect(`${config.DATABASE_URL}`)
       .then(() => {
         console.log("successfully connected to the DB");
       })
