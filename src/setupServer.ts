@@ -14,9 +14,8 @@ import cookieSessions from "cookie-session";
 import HTTP_STATUS from "http-status-codes";
 import compression from "compression";
 import "express-async-errors";
-import applicationRoutes from "./routes";
+import Logger from "bunyan";
 
-import { config } from "./config";
 // SOCKET.IO
 import { Server } from "socket.io";
 
@@ -27,6 +26,10 @@ import {
   CustomError,
   IErrorResponse,
 } from "./shared/globals/helpers/error-handler";
+import applicationRoutes from "./routes";
+import { config } from "./config";
+
+const log: Logger = config.createLogger("server");
 
 export class StreamChatServer {
   constructor(private app: Application) {
@@ -85,7 +88,7 @@ export class StreamChatServer {
         res: Response,
         next: NextFunction
       ) => {
-        console.log(error);
+        log.error(error);
 
         if (error instanceof CustomError) {
           return res.status(error.statusCode).json(error.serializeErrors());
@@ -102,7 +105,7 @@ export class StreamChatServer {
       this.startHTTPServer(httpServer);
       this.socketIOConnection(socketIo);
     } catch (error) {
-      console.log(error);
+      log.error(error);
     }
   }
 
@@ -123,8 +126,9 @@ export class StreamChatServer {
   }
 
   private startHTTPServer(httpServer: http.Server) {
+    log.info(`the has started with the process of ${process.pid}`);
     httpServer.listen(+config.PORT!, () => {
-      console.log("Server running on " + config.PORT);
+      log.info("Server running on " + config.PORT);
     });
   }
 
