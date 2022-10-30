@@ -38,5 +38,3 @@ You can find the repo for the frontend built with react [here](https://github.co
 - Typescript
 - API key, secret and cloud name from cloudinary [https://cloudinary.com/](https://cloudinary.com/)
 - Local email sender and password [https://ethereal.email/](https://ethereal.email/)
-
-You'll need to copy the contents of `.env.development.example`, add to `.env` file and update with the necessary information.
