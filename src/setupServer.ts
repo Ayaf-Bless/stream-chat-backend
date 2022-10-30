@@ -1,11 +1,4 @@
-import {
-  Application,
-  json,
-  urlencoded,
-  Request,
-  Response,
-  NextFunction,
-} from "express";
+import { Application, json, urlencoded, Request, Response, NextFunction } from "express";
 import http from "http";
 import cors from "cors";
 import helmet from "helmet";
@@ -22,12 +15,9 @@ import { Server } from "socket.io";
 // REDIS
 import { createClient } from "redis";
 import { createAdapter } from "@socket.io/redis-adapter";
-import {
-  CustomError,
-  IErrorResponse,
-} from "./shared/globals/helpers/error-handler";
-import applicationRoutes from "./routes";
-import { config } from "./config";
+import { CustomError, IErrorResponse } from "@global/helpers/error-handler";
+import applicationRoutes from "@root/routes";
+import { config } from "@root/config";
 
 const log: Logger = config.createLogger("server");
 
@@ -50,7 +40,7 @@ export class StreamChatServer {
         name: "session",
         keys: [config.SECRET_KEY_COOKIE_1!, config.SECRET_KEY_COOKIE_2!],
         maxAge: 24 * 7 * 3600000,
-        secure: config.NODE_ENV !== "development",
+        secure: config.NODE_ENV !== "development"
       })
     );
     app.use(hpp());
@@ -60,7 +50,7 @@ export class StreamChatServer {
         origin: config.CLIENT_URL,
         credentials: true,
         optionsSuccessStatus: 200,
-        methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTION"],
+        methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTION"]
       })
     );
   }
@@ -77,25 +67,16 @@ export class StreamChatServer {
 
   private globalErrorHandler(app: Application) {
     app.all("*", (req: Request, res: Response) => {
-      res
-        .status(HTTP_STATUS.NOT_FOUND)
-        .json({ message: `${req.originalUrl} not found` });
+      res.status(HTTP_STATUS.NOT_FOUND).json({ message: `${req.originalUrl} not found` });
     });
-    app.use(
-      (
-        error: IErrorResponse,
-        req: Request,
-        res: Response,
-        next: NextFunction
-      ) => {
-        log.error(error);
+    app.use((error: IErrorResponse, req: Request, res: Response, next: NextFunction) => {
+      log.error(error);
 
-        if (error instanceof CustomError) {
-          return res.status(error.statusCode).json(error.serializeErrors());
-        }
-        next();
+      if (error instanceof CustomError) {
+        return res.status(error.statusCode).json(error.serializeErrors());
       }
-    );
+      next();
+    });
   }
 
   private async startServer(app: Application): Promise<void> {
@@ -113,11 +94,11 @@ export class StreamChatServer {
     const io: Server = new Server(httpServer, {
       cors: {
         origin: config.CLIENT_URL,
-        methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTION"],
-      },
+        methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTION"]
+      }
     });
     const pubClient = createClient({
-      url: config.REDIS_HOST,
+      url: config.REDIS_HOST
     });
     const subClient = pubClient.duplicate();
     await Promise.all([pubClient.connect(), subClient.connect()]);

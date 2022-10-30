@@ -1,7 +1,7 @@
 import express, { Express } from "express";
-import { StreamChatServer } from "./setupServer";
-import dbConnection from "./setupDatabase";
-import { config } from "./config";
+import { StreamChatServer } from "@root/setupServer";
+import dbConnection from "@root/setupDatabase";
+import { config } from "@root/config";
 
 class Application {
   public init(): void {
