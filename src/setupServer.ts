@@ -23,6 +23,10 @@ import { Server } from "socket.io";
 // REDIS
 import { createClient } from "redis";
 import { createAdapter } from "@socket.io/redis-adapter";
+import {
+  CustomError,
+  IErrorResponse,
+} from "./shared/globals/helpers/error-handler";
 
 export class StreamChatServer {
   constructor(private app: Application) {
@@ -68,7 +72,28 @@ export class StreamChatServer {
     applicationRoutes(app);
   }
 
-  private globalErrorHandler(app: Application) {}
+  private globalErrorHandler(app: Application) {
+    app.all("*", (req: Request, res: Response) => {
+      res
+        .status(HTTP_STATUS.NOT_FOUND)
+        .json({ message: `${req.originalUrl} not found` });
+    });
+    app.use(
+      (
+        error: IErrorResponse,
+        req: Request,
+        res: Response,
+        next: NextFunction
+      ) => {
+        console.log(error);
+
+        if (error instanceof CustomError) {
+          return res.status(error.statusCode).json(error.serializeErrors());
+        }
+        next();
+      }
+    );
+  }
 
   private async startServer(app: Application): Promise<void> {
     try {
