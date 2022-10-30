@@ -6,7 +6,7 @@ import {
   Response,
   NextFunction,
 } from "express";
-import { Server } from "http";
+import http from "http";
 import cors from "cors";
 import helmet from "helmet";
 import hpp from "hpp";
@@ -14,6 +14,8 @@ import cookieSessions from "cookie-session";
 import HTTP_STATUS from "http-status-codes";
 import compression from "compression";
 import "express-async-errors";
+
+const SERVER_PORT = 4000;
 
 export class StreamChatServer {
   constructor(private app: Application) {
@@ -54,7 +56,18 @@ export class StreamChatServer {
   }
   private routesMiddleware(app: Application) {}
   private globalErrorHandler(app: Application) {}
-  private startServer(app: Application) {}
-  private createSocketIO(httpServer: Server) {}
-  private startHTTPServer(httpServer: Server) {}
+  private async startServer(app: Application): Promise<void> {
+    try {
+      const httpServer: http.Server = new http.Server(this.app);
+      this.startHTTPServer(httpServer);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  private createSocketIO(httpServer: http.Server) {}
+  private startHTTPServer(httpServer: http.Server) {
+    httpServer.listen(SERVER_PORT, () => {
+      console.log("Server running on " + SERVER_PORT);
+    });
+  }
 }
