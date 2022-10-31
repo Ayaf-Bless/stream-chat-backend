@@ -1,5 +1,6 @@
 import * as dotenv from "dotenv";
 import bunyan from "bunyan";
+import cloudinary from "cloudinary";
 
 dotenv.config();
 
@@ -12,6 +13,9 @@ class Config {
   public CLIENT_URL: string | undefined;
   public PORT: string | undefined;
   public REDIS_HOST: string | undefined;
+  public CLOUD_NAME: string | undefined;
+  public CLOUD_API_KEY: string | undefined;
+  public CLOUD_API_SECRET_KEY: string | undefined;
 
   constructor() {
     this.DATABASE_URL = process.env.DATABASE_URL;
@@ -22,6 +26,9 @@ class Config {
     this.CLIENT_URL = process.env.CLIENT_URL;
     this.PORT = process.env.PORT;
     this.REDIS_HOST = process.env.REDIS_HOST;
+    this.CLOUD_NAME = process.env.CLOUD_NAME;
+    this.CLOUD_API_KEY = process.env.CLOUD_API_KEY;
+    this.CLOUD_API_SECRET_KEY = process.env.CLOUD_API_SECRET_KEY;
   }
 
   public createLogger(name: string): bunyan {
@@ -34,6 +41,14 @@ class Config {
         throw new Error(`Configuration for ${key} is missing`);
       }
     }
+  }
+
+  public cloudinaryConfig(): void {
+    cloudinary.v2.config({
+      cloud_name: this.CLOUD_NAME,
+      api_key: this.CLOUD_API_KEY,
+      api_secret: this.CLOUD_API_SECRET_KEY
+    });
   }
 }
 
