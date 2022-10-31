@@ -31,7 +31,7 @@ export abstract class CustomError extends Error {
 }
 
 export class BadRequestError extends CustomError {
-  status: string = "error";
+  status = "error";
   statusCode: number = HTTP_STATUS_CODE.BAD_REQUEST;
 
   constructor(public message: string) {
@@ -40,7 +40,7 @@ export class BadRequestError extends CustomError {
 }
 
 export class NotFoundError extends CustomError {
-  status: string = "error";
+  status = "error";
   statusCode: number = HTTP_STATUS_CODE.NOT_FOUND;
   constructor(message: string) {
     super(message);
@@ -48,7 +48,7 @@ export class NotFoundError extends CustomError {
 }
 
 export class NotAuthorizedError extends CustomError {
-  status: string = "error";
+  status = "error";
   statusCode: number = HTTP_STATUS_CODE.UNAUTHORIZED;
 
   constructor(message: string) {
@@ -57,7 +57,7 @@ export class NotAuthorizedError extends CustomError {
 }
 
 export class FileTooLargeError extends CustomError {
-  status: string = "error";
+  status = "error";
   statusCode: number = HTTP_STATUS_CODE.REQUEST_TOO_LONG;
 
   constructor(message: string) {
@@ -66,7 +66,7 @@ export class FileTooLargeError extends CustomError {
 }
 
 export class ServerError extends CustomError {
-  status: string = "error";
+  status = "error";
   statusCode: number = HTTP_STATUS_CODE.SERVICE_UNAVAILABLE;
 
   constructor(message: string) {
@@ -75,7 +75,7 @@ export class ServerError extends CustomError {
 }
 
 export class JoiRequestValidationError extends CustomError {
-  status: string = "error";
+  status = "error";
   statusCode: number = HTTP_STATUS_CODE.BAD_REQUEST;
 
   constructor(message: string) {
@@ -84,9 +84,9 @@ export class JoiRequestValidationError extends CustomError {
 }
 
 export class DatabaseConnectionError extends CustomError {
-  status: string = "error";
+  status = "error";
   statusCode = HTTP_STATUS_CODE.SERVICE_UNAVAILABLE;
-  reason: string = "error connection to the database";
+
   constructor(message: string) {
     super(message);
   }
