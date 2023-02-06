@@ -4,18 +4,20 @@ import cloudinary from "cloudinary";
 
 dotenv.config();
 
+type StringOrUndefined = string | undefined;
+
 class Config {
-  public DATABASE_URL: string | undefined;
-  public JWT_TOKEN: string | undefined;
-  public NODE_ENV: string | undefined;
-  public SECRET_KEY_COOKIE_1: string | undefined;
-  public SECRET_KEY_COOKIE_2: string | undefined;
-  public CLIENT_URL: string | undefined;
-  public PORT: string | undefined;
-  public REDIS_HOST: string | undefined;
-  public CLOUD_NAME: string | undefined;
-  public CLOUD_API_KEY: string | undefined;
-  public CLOUD_API_SECRET_KEY: string | undefined;
+  public DATABASE_URL: StringOrUndefined;
+  public JWT_TOKEN: StringOrUndefined;
+  public NODE_ENV: StringOrUndefined;
+  public SECRET_KEY_COOKIE_1: StringOrUndefined;
+  public SECRET_KEY_COOKIE_2: StringOrUndefined;
+  public CLIENT_URL: StringOrUndefined;
+  public PORT: StringOrUndefined;
+  public REDIS_HOST: StringOrUndefined;
+  public CLOUD_NAME: StringOrUndefined;
+  public CLOUD_API_KEY: StringOrUndefined;
+  public CLOUD_API_SECRET_KEY: StringOrUndefined;
 
   constructor() {
     this.DATABASE_URL = process.env.DATABASE_URL;

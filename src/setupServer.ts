@@ -50,7 +50,7 @@ export class StreamChatServer {
         origin: config.CLIENT_URL,
         credentials: true,
         optionsSuccessStatus: 200,
-        methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTION"]
+        methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"]
       })
     );
   }
@@ -58,7 +58,7 @@ export class StreamChatServer {
   private standardMiddleware(app: Application) {
     app.use(compression());
     app.use(json({ limit: "50mb" }));
-    app.use(urlencoded({ extended: true }));
+    app.use(urlencoded({ extended: true, limit: "50mb" }));
   }
 
   private routesMiddleware(app: Application) {
@@ -97,9 +97,11 @@ export class StreamChatServer {
         methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTION"]
       }
     });
+
     const pubClient = createClient({
       url: config.REDIS_HOST
     });
+
     const subClient = pubClient.duplicate();
     await Promise.all([pubClient.connect(), subClient.connect()]);
     io.adapter(createAdapter(pubClient, subClient));

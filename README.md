@@ -38,3 +38,4 @@ You can find the repo for the frontend built with react [here](https://github.co
 - Typescript
 - API key, secret and cloud name from cloudinary [https://cloudinary.com/](https://cloudinary.com/)
 - Local email sender and password [https://ethereal.email/](https://ethereal.email/)
+- stopped at: 12. SocketIO setup
