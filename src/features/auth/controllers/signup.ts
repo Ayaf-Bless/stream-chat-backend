@@ -8,6 +8,7 @@ import { authService } from "@service/db/auth.service";
 import { UploadApiResponse } from "cloudinary";
 import { Request, Response } from "express";
 import { ObjectId } from "mongodb";
+import HTTP_STATUS from "http-status-codes";
 
 export class SignUp {
   @joiValidation(signupSchema)
@@ -40,6 +41,8 @@ export class SignUp {
     if (!result.public_id) {
       throw new BadRequestError("File upload: Error occured, try again");
     }
+
+    res.status(HTTP_STATUS.CREATED).json({ message: "user created", authData });
   }
 
   private signupDate(data: ISignUpData): IAuthDocument {

@@ -1,6 +1,7 @@
 You can find the repo for the frontend built with react [here](https://github.com/Ayaf-Bless/stream-chat-backend).
 
 ## Features
+
 1. Signup and signin authentication
 2. Forgot password and reset password
 3. Change password when logged in
@@ -13,6 +14,7 @@ You can find the repo for the frontend built with react [here](https://github.co
 10. In-app notification and email notification
 
 ## Main tools
+
 - Node.js
 - Typescript
 - MongoDB
@@ -38,4 +40,4 @@ You can find the repo for the frontend built with react [here](https://github.co
 - Typescript
 - API key, secret and cloud name from cloudinary [https://cloudinary.com/](https://cloudinary.com/)
 - Local email sender and password [https://ethereal.email/](https://ethereal.email/)
-- stopped at: 12. SocketIO setup
+- stopped at: 11. User interface and model schema
